@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [responseData, setResponseData] = useState(null);
+
+  useEffect(() => {
+    // API endpoint URL
+    const apiUrl = "https://chimpu.xyz/api/post.php";
+
+    // data to be sent in the POST request
+    const postData = {
+      phonenumber: 11111111,
+    };
+
+    // POST request using axios
+    axios
+      .post(apiUrl, postData)
+      .then((response) => {
+        const headers = response.headers;
+        setResponseData(headers);
+      })
+      .catch((error) => {
+        console.error("Error making POST request:", error);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Data received in headers:</h1>
+      <ul>
+        {responseData &&
+          Object.keys(responseData).map((key, index) => (
+            <li key={index}>
+              {key}: {responseData[key]}
+            </li>
+          ))}
+      </ul>
     </div>
   );
 }
